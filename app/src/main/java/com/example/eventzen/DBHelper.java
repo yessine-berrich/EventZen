@@ -146,22 +146,29 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // --- Méthodes Clés d'Authentification ---
 
+    // Dans DBHelper.java
+
     /**
-     * Enregistre un nouvel utilisateur (Client ou Organisateur).
+     * Insère un nouvel utilisateur dans la base de données.
+     * Le rôle est 'client' par défaut.
+     * @return L'ID de la nouvelle ligne insérée, ou -1 en cas d'échec.
      */
-    public boolean registerUser(String nom, String prenom, String email, String password, String role) {
+    public long registerUser(String nom, String prenom, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        // Utilisez la méthode de hachage de mot de passe si vous en avez une, sinon utilisez la chaîne brute pour l'instant.
+        // values.put(COLUMN_PASSWORD, hashPassword(password));
+
         values.put(COLUMN_NOM, nom);
         values.put(COLUMN_PRENOM, prenom);
         values.put(COLUMN_EMAIL, email);
         values.put(COLUMN_PASSWORD, password);
-        values.put(COLUMN_ROLE, role);
+        values.put(COLUMN_ROLE, "client"); // Rôle par défaut
 
-        long result = db.insert(TABLE_USERS, null, values);
+        long newRowId = db.insert(TABLE_USERS, null, values);
         db.close();
-        // Si l'insertion est réussie, insert renvoie un ID > -1
-        return result != -1;
+        return newRowId;
     }
 
     /**

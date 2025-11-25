@@ -42,9 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> attemptLogin());
 
         tvRegisterLink.setOnClickListener(v -> {
-            // TODO: Créer et lancer l'activité RegisterActivity
-            Toast.makeText(this, "Redirection vers l'inscription...", Toast.LENGTH_SHORT).show();
-            // startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
 
