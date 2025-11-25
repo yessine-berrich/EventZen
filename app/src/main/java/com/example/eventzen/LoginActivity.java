@@ -68,7 +68,15 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Bienvenue, " + prenom + " (" + role + ")!", Toast.LENGTH_LONG).show();
 
             // Rediriger vers l'activité principale
-            Intent intent = new Intent(LoginActivity.this, BrowseEventsActivity.class);
+            // 💥 NOUVELLE LOGIQUE DE REDIRECTION BASÉE SUR LE RÔLE 💥
+            Intent intent;
+            if (role.equals("admin")) {
+                intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+            } else {
+                // Redirection Client ou Organisateur par défaut
+                intent = new Intent(LoginActivity.this, BrowseEventsActivity.class);
+            }
+
             startActivity(intent);
             finish();
 

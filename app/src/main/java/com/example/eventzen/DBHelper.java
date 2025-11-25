@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "EventDB.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // --- Table USERS (Utilisateurs) ---
     public static final String TABLE_USERS = "users";
@@ -117,9 +117,9 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TICKETS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        if (oldVersion < 2) { // Utilisez la version appropriée
-            db.execSQL("ALTER TABLE " + TABLE_TICKETS + " ADD COLUMN " + T_DESCRIPTION + " TEXT DEFAULT ''");
-        }
+//        if (oldVersion < 2) { // Utilisez la version appropriée
+//            db.execSQL("ALTER TABLE " + TABLE_TICKETS + " ADD COLUMN " + T_DESCRIPTION + " TEXT DEFAULT ''");
+//        }
         onCreate(db);
     }
 
@@ -142,6 +142,15 @@ public class DBHelper extends SQLiteOpenHelper {
         client.put(COLUMN_PASSWORD, "pass");
         client.put(COLUMN_ROLE, "client");
         db.insert(TABLE_USERS, null, client);
+
+        // 3. admin
+        ContentValues admin = new ContentValues();
+        client.put(COLUMN_NOM, "Alex");
+        client.put(COLUMN_PRENOM, "lupin");
+        client.put(COLUMN_EMAIL, "admin@test.com");
+        client.put(COLUMN_PASSWORD, "pass");
+        client.put(COLUMN_ROLE, "admin");
+        db.insert(TABLE_USERS, null, admin);
     }
 
     // --- Méthodes Clés d'Authentification ---
@@ -473,5 +482,79 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // Retourne tous les billets pour cet événement
         return db.query(TABLE_TICKETS, columns, selection, selectionArgs, null, null, T_PRICE + " ASC");
+    }
+
+    /**
+     * Compte le nombre total d'utilisateurs.
+     */
+    public int getTotalUsersCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_USERS, null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    /**
+     * Compte le nombre total d'événements.
+     */
+    public int getTotalEventsCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_EVENTS, null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    /**
+     * Compte le nombre total d'inscriptions.
+     */
+    public int getTotalRegistrationsCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_REGISTRATIONS, null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    /**
+     * Récupère tous les utilisateurs (ID, Nom, Prénom, Email, Rôle).
+     */
+    public Cursor getAllUsers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Exclusion du mot de passe pour la sécurité
+        String[] columns = {COLUMN_ID, COLUMN_NOM, COLUMN_PRENOM, COLUMN_EMAIL, COLUMN_ROLE};
+
+        // Trier par Rôle puis par Nom pour une meilleure lisibilité
+        return db.query(TABLE_USERS, columns, null, null, null, null, COLUMN_ROLE + " DESC, " + COLUMN_NOM + " ASC");
+    }
+
+    /**
+     * Met à jour le rôle d'un utilisateur spécifique.
+     */
+    public boolean updateUserRole(int userId, String newRole) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_ROLE, newRole);
+
+        String selection = COLUMN_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(userId)};
+
+        int rowsAffected = db.update(TABLE_USERS, values, selection, selectionArgs);
+        db.close();
+        return rowsAffected > 0;
     }
 }

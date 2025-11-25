@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="role_admin">#FF5252</color>
+    <color name="role_organizer">#4CAF50</color>
+    <color name="role_client">#2196F3</color>
 </resources>

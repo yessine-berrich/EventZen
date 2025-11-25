@@ -13,6 +13,12 @@
         android:theme="@style/Theme.EventZen"
         tools:targetApi="31">
         <activity
+            android:name=".ManageUsersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
@@ -29,6 +35,9 @@
             android:exported="false" />
         <activity
             android:name=".OrganizerEventsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageTicketsActivity"
             android:exported="false" />
         <activity
             android:name=".UserRegistrationsActivity"
