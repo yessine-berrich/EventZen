@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_manage_events"
+        android:title="Gérer Mes Événements"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_my_registrations"
+        android:title="Mes Inscriptions"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Se Déconnecter"
+        app:showAsAction="never" />
+
+</menu>
